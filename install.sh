@@ -12,9 +12,7 @@ fi
 
 SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-THEME_NAME=WhiteSur
-COLOR_VARIANTS=('' '-dark')
-THEME_VARIANTS=('' '-purple' '-pink' '-red' '-orange' '-yellow' '-green' '-grey' '-nord')
+THEME_NAME=macOS-icons
 
 usage() {
 cat << EOF
@@ -23,7 +21,6 @@ cat << EOF
   OPTIONS:
     -d, --dest DIR          Specify destination directory (Default: $DEST_DIR)
     -n, --name NAME         Specify theme name (Default: $THEME_NAME)
-    -t, --theme VARIANT     Specify theme color variant(s) [default|purple|pink|red|orange|yellow|green|grey|nord|all] (Default: blue)
     -a, --alternative       Install alternative icons for software center and file-manager
     -b, --bold              Install bold panel icons version
     --black                 Black panel icons version
@@ -39,10 +36,8 @@ install() {
   local dest=${1}
   local name=${2}
   local theme=${3}
-  local color=${4}
 
-  local THEME_DIR=${dest}/${name}${theme}${color}
-
+  local THEME_DIR=${dest}/${name}${theme}
   [[ -d ${THEME_DIR} ]] && rm -rf ${THEME_DIR}
 
   echo "Installing '${THEME_DIR}'..."
@@ -189,63 +184,7 @@ while [[ "$#" -gt 0 ]]; do
       remove='true'
       shift
       ;;
-    -t|--theme)
-      shift
-      for theme in "${@}"; do
-        case "${theme}" in
-          default)
-            themes+=("${THEME_VARIANTS[0]}")
-            shift
-            ;;
-          purple)
-            themes+=("${THEME_VARIANTS[1]}")
-            shift
-            ;;
-          pink)
-            themes+=("${THEME_VARIANTS[2]}")
-            shift
-            ;;
-          red)
-            themes+=("${THEME_VARIANTS[3]}")
-            shift
-            ;;
-          orange)
-            themes+=("${THEME_VARIANTS[4]}")
-            shift
-            ;;
-          yellow)
-            themes+=("${THEME_VARIANTS[5]}")
-            shift
-            ;;
-          green)
-            themes+=("${THEME_VARIANTS[6]}")
-            shift
-            ;;
-          grey)
-            themes+=("${THEME_VARIANTS[7]}")
-            shift
-            ;;
-          nord)
-            themes+=("${THEME_VARIANTS[8]}")
-            shift
-            ;;
-          all)
-            themes+=("${THEME_VARIANTS[@]}")
-            shift
-            ;;
-          -*|--*)
-            break
-            ;;
-          *)
-            echo "ERROR: Unrecognized theme variant '$1'."
-            echo "Try '$0 --help' for more information."
-            exit 1
-            ;;
-        esac
-        # echo "Installing '${theme}' folder version..."
-      done
-      ;;
-    -h|--help)
+     h|--help)
       usage
       exit 0
       ;;
@@ -266,12 +205,13 @@ if [[ "${#colors[@]}" -eq 0 ]] ; then
 fi
 
 install_theme() {
-  for theme in "${themes[@]}"; do
-    for color in "${colors[@]}"; do
-      install "${dest:-${DEST_DIR}}" "${name:-${THEME_NAME}}" "${theme}" "${color}"
-    done
-  done
+    install "${dest:-${DEST_DIR}}" "${name:-${THEME_NAME}}" "${theme}" 
+  
 }
+
+
+
+
 
 uninstall_theme() {
   for theme in "${THEME_VARIANTS[@]}"; do
