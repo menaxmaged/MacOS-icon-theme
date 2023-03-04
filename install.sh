@@ -13,6 +13,7 @@ fi
 SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 THEME_NAME=macOS-icons
+COLOR_VARIANTS=('' '-dark')
 
 usage() {
 cat << EOF
@@ -21,6 +22,7 @@ cat << EOF
   OPTIONS:
     -d, --dest DIR          Specify destination directory (Default: $DEST_DIR)
     -n, --name NAME         Specify theme name (Default: $THEME_NAME)
+    -t, --theme VARIANT     Specify theme color variant(s) [default|purple|pink|red|orange|yellow|green|grey|nord|all] (Default: blue)
     -a, --alternative       Install alternative icons for software center and file-manager
     -b, --bold              Install bold panel icons version
     --black                 Black panel icons version
@@ -33,82 +35,85 @@ EOF
 }
 
 install() {
+   bold='true'
   local dest=${1}
   local name=${2}
   local theme=${3}
+  local color=${4}
 
-  local THEME_DIR=${dest}/${name}${theme}
+  local THEME_DIR=${dest}/${name}${theme}${color}
+
   [[ -d ${THEME_DIR} ]] && rm -rf ${THEME_DIR}
 
   echo "Installing '${THEME_DIR}'..."
 
-  mkdir -p                                                                                   ${THEME_DIR}
-  cp -r "${SRC_DIR}"/{COPYING,AUTHORS}                                                       ${THEME_DIR}
-  cp -r "${SRC_DIR}"/src/index.theme                                                         ${THEME_DIR}
+  mkdir -p                                                                                 ${THEME_DIR}
+  cp -r ${SRC_DIR}/{COPYING,AUTHORS}                                                       ${THEME_DIR}
+  cp -r ${SRC_DIR}/src/index.theme                                                         ${THEME_DIR}
 
   cd ${THEME_DIR}
   sed -i "s/${name}/${name}${theme}${color}/g" index.theme
 
   if [[ ${color} == '' ]]; then
-    mkdir -p                                                                                 ${THEME_DIR}/status
-    cp -r "${SRC_DIR}"/src/{actions,animations,apps,categories,devices,emblems,mimes,places} ${THEME_DIR}
-    cp -r "${SRC_DIR}"/src/status/{16,22,24,32,symbolic}                                     ${THEME_DIR}/status
+    mkdir -p                                                                               ${THEME_DIR}/status
+    cp -r ${SRC_DIR}/src/{actions,animations,apps,categories,devices,emblems,mimes,places} ${THEME_DIR}
+    cp -r ${SRC_DIR}/src/status/{16,22,24,32,symbolic}                                     ${THEME_DIR}/status
 
     if [[ ${black:-} == 'true' ]]; then
       sed -i "s/#ffffff/#363636/g" "${THEME_DIR}"/status/{16,22,24}/*
     fi
 
     if [[ ${bold:-} == 'true' ]]; then
-      cp -r "${SRC_DIR}"/bold/*                                                              ${THEME_DIR}
+      cp -r ${SRC_DIR}/bold/*                                                              ${THEME_DIR}
     fi
 
-    cp -r "${SRC_DIR}"/links/{actions,apps,categories,devices,emblems,mimes,places,status}   ${THEME_DIR}
+    cp -r ${SRC_DIR}/links/{actions,apps,categories,devices,emblems,mimes,places,status}   ${THEME_DIR}
 
     if [[ $DESKTOP_SESSION == '/usr/share/xsessions/budgie-desktop' ]]; then
-      cp -r "${SRC_DIR}"/src/status/symbolic-budgie/*.svg                                    ${THEME_DIR}/status/symbolic
+      cp -r ${SRC_DIR}/src/status/symbolic-budgie/*.svg                                    ${THEME_DIR}/status/symbolic
     fi
 
     if [[ ${alternative:-} == 'true' ]]; then
-      cp -r "${SRC_DIR}"/alternative/apps/*.svg                                              ${THEME_DIR}/apps/scalable
+      cp -r ${SRC_DIR}/alternative/apps/*.svg                                              ${THEME_DIR}/apps/scalable
     fi
 
     if [[ ${theme} != '' ]]; then
-      cp -r "${SRC_DIR}"/colors/color${theme}/*.svg                                          ${THEME_DIR}/places/scalable
+      cp -r ${SRC_DIR}/colors/color${theme}/*.svg                                          ${THEME_DIR}/places/scalable
     fi
   fi
 
   if [[ ${color} == '-dark' ]]; then
-    mkdir -p                                                                                 ${THEME_DIR}/{apps,categories,emblems,devices,mimes,places,status}
+    mkdir -p                                                                               ${THEME_DIR}/{apps,categories,emblems,devices,mimes,places,status}
 
-    cp -r "${SRC_DIR}"/src/actions                                                           ${THEME_DIR}
-    cp -r "${SRC_DIR}"/src/apps/symbolic                                                     ${THEME_DIR}/apps
-    cp -r "${SRC_DIR}"/src/categories/symbolic                                               ${THEME_DIR}/categories
-    cp -r "${SRC_DIR}"/src/emblems/symbolic                                                  ${THEME_DIR}/emblems
-    cp -r "${SRC_DIR}"/src/mimes/symbolic                                                    ${THEME_DIR}/mimes
-    cp -r "${SRC_DIR}"/src/devices/{16,22,24,symbolic}                                       ${THEME_DIR}/devices
-    cp -r "${SRC_DIR}"/src/places/{16,22,24,symbolic}                                        ${THEME_DIR}/places
-    cp -r "${SRC_DIR}"/src/status/{16,22,24,symbolic}                                        ${THEME_DIR}/status
+    cp -r ${SRC_DIR}/src/actions                                                           ${THEME_DIR}
+    cp -r ${SRC_DIR}/src/apps/symbolic                                                     ${THEME_DIR}/apps
+    cp -r ${SRC_DIR}/src/categories/symbolic                                               ${THEME_DIR}/categories
+    cp -r ${SRC_DIR}/src/emblems/symbolic                                                  ${THEME_DIR}/emblems
+    cp -r ${SRC_DIR}/src/mimes/symbolic                                                    ${THEME_DIR}/mimes
+    cp -r ${SRC_DIR}/src/devices/{16,22,24,symbolic}                                       ${THEME_DIR}/devices
+    cp -r ${SRC_DIR}/src/places/{16,22,24,symbolic}                                        ${THEME_DIR}/places
+    cp -r ${SRC_DIR}/src/status/{16,22,24,symbolic}                                        ${THEME_DIR}/status
 
     if [[ ${bold:-} == 'true' ]]; then
-      cp -r "${SRC_DIR}"/bold/*                                                              ${THEME_DIR}
+      cp -r ${SRC_DIR}/bold/*                                                              ${THEME_DIR}
     fi
 
     if [[ $DESKTOP_SESSION == '/usr/share/xsessions/budgie-desktop' ]]; then
-      cp -r "${SRC_DIR}"/src/status/symbolic-budgie/*.svg                                    ${THEME_DIR}/status/symbolic
+      cp -r ${SRC_DIR}/src/status/symbolic-budgie/*.svg                                ${THEME_DIR}/status/symbolic
     fi
 
     # Change icon color for dark theme
-    sed -i "s/#363636/#dedede/g" "${THEME_DIR}"/{actions,devices,places,status}/{16,22,24}/*
-    sed -i "s/#363636/#dedede/g" "${THEME_DIR}"/actions/32/*
-    sed -i "s/#363636/#dedede/g" "${THEME_DIR}"/{actions,apps,categories,emblems,devices,mimes,places,status}/symbolic/*
+    sed -i "s/#363636/#FFFFFF/g" "${THEME_DIR}"/{actions,devices,places,status}/{16,22,24}/*
+    sed -i "s/#363636/#FFFFFF/g" "${THEME_DIR}"/actions/32/*
+    sed -i "s/#363636/#FFFFFF/g" "${THEME_DIR}"/{actions,apps,categories,emblems,devices,mimes,places,status}/symbolic/*
 
-    cp -r "${SRC_DIR}"/links/actions/{16,22,24,32,symbolic}                                  ${THEME_DIR}/actions
-    cp -r "${SRC_DIR}"/links/devices/{16,22,24,symbolic}                                     ${THEME_DIR}/devices
-    cp -r "${SRC_DIR}"/links/places/{16,22,24,symbolic}                                      ${THEME_DIR}/places
-    cp -r "${SRC_DIR}"/links/status/{16,22,24,symbolic}                                      ${THEME_DIR}/status
-    cp -r "${SRC_DIR}"/links/apps/symbolic                                                   ${THEME_DIR}/apps
-    cp -r "${SRC_DIR}"/links/categories/symbolic                                             ${THEME_DIR}/categories
-    cp -r "${SRC_DIR}"/links/mimes/symbolic                                                  ${THEME_DIR}/mimes
+    cp -r ${SRC_DIR}/links/actions/{16,22,24,32,symbolic}                                  ${THEME_DIR}/actions
+    cp -r ${SRC_DIR}/links/devices/{16,22,24,symbolic}                                     ${THEME_DIR}/devices
+    cp -r ${SRC_DIR}/links/places/{16,22,24,symbolic}                                      ${THEME_DIR}/places
+    cp -r ${SRC_DIR}/links/status/{16,22,24,symbolic}                                      ${THEME_DIR}/status
+    cp -r ${SRC_DIR}/links/apps/symbolic                                                   ${THEME_DIR}/apps
+    cp -r ${SRC_DIR}/links/categories/symbolic                                             ${THEME_DIR}/categories
+    cp -r ${SRC_DIR}/links/mimes/symbolic                                                  ${THEME_DIR}/mimes
 
     cd ${dest}
     ln -s ../${name}${theme}/animations ${name}${theme}-dark/animations
@@ -184,7 +189,7 @@ while [[ "$#" -gt 0 ]]; do
       remove='true'
       shift
       ;;
-     h|--help)
+    -h|--help)
       usage
       exit 0
       ;;
@@ -205,13 +210,11 @@ if [[ "${#colors[@]}" -eq 0 ]] ; then
 fi
 
 install_theme() {
-    install "${dest:-${DEST_DIR}}" "${name:-${THEME_NAME}}" "${theme}" 
-  
+    for color in "${colors[@]}"; do
+      install "${dest:-${DEST_DIR}}" "${name:-${THEME_NAME}}" "${theme}" "${color}"
+    
+  done
 }
-
-
-
-
 
 uninstall_theme() {
   for theme in "${THEME_VARIANTS[@]}"; do
