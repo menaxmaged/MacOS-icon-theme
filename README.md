@@ -10,10 +10,8 @@ Usage:  `./install.sh`  **[OPTIONS...]**
 |  OPTIONS:           | |
 |:--------------------|:-------------|
 |-d, --dest           | Specify theme destination directory (Default: $HOME/.themes)|
-|-n, --name           | Specify theme name (Default: WhiteSur)|
+|-n, --name           | Specify theme name (Default: MacOS-icons)|
 |-t, --theme          | Specify theme color variant(s) [default/purple/pink/red/orange/yellow/green/grey/all] (Default: blue)|
-|-a, --alternative    | Install alternative icons (redesigned MacOS default icons)|
-|-b, --bold           | Install bold panel icons version|
 |--black              | Black panel icons version|
 |-r,--remove,-u,--uninstall | Uninstall (remove) icon themes|
 |-h, --help           | Show this help|
@@ -22,23 +20,15 @@ Usage:  `./install.sh`  **[OPTIONS...]**
 
 > For more information, run: `./install.sh --help`
 
-![alt](alt-version.png?raw=true)
-
-![bold](bold-size.png?raw=true)
-
-> Bold version suggested use in `High resolution display` like 4k display with 200% scale!
 
 ## Requirement
 You can use this with:
 
 ### GTK theme
 
-WhiteSur-gtk-theme: https://github.com/vinceliuice/WhiteSur-gtk-theme
+WhiteSur-gtk-theme: https://github.com/menaxmaged/WhiteSur-gtk-theme
 
 ### KDE theme
 
-WhiteSur-kde: https://github.com/vinceliuice/WhiteSur-kde
+WhiteSur-kde: https://github.com/menaxmaged/WhiteSur-kde
 
-## Preview
-![1](preview.png)
-![2](preview01.png)
