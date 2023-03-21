@@ -23,7 +23,6 @@ cat << EOF
     -d, --dest DIR          Specify destination directory (Default: $DEST_DIR)
     -n, --name NAME         Specify theme name (Default: $THEME_NAME)
     -t, --theme VARIANT     Specify theme color variant(s) [default|purple|pink|red|orange|yellow|green|grey|nord|all] (Default: blue)
-    -a, --alternative       Install alternative icons for software center and file-manager
     -b, --bold              Install bold panel icons version
     --black                 Black panel icons version
 
@@ -73,9 +72,6 @@ install() {
       cp -r ${SRC_DIR}/src/status/symbolic-budgie/*.svg                                    ${THEME_DIR}/status/symbolic
     fi
 
-    if [[ ${alternative:-} == 'true' ]]; then
-      cp -r ${SRC_DIR}/alternative/apps/*.svg                                              ${THEME_DIR}/apps/scalable
-    fi
 
     if [[ ${theme} != '' ]]; then
       cp -r ${SRC_DIR}/colors/color${theme}/*.svg                                          ${THEME_DIR}/places/scalable
@@ -169,11 +165,6 @@ while [[ "$#" -gt 0 ]]; do
     -n|--name)
       name="${2}"
       shift 2
-      ;;
-    -a|--alternative)
-      alternative='true'
-      echo "Installing 'alternative' version..."
-      shift
       ;;
     -b|--bold)
       bold='true'
